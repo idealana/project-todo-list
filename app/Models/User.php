@@ -6,10 +6,11 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -37,4 +38,22 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Relation hasMany to TodoList
+     */
+    public function todo_lists()
+    {
+        return $this->hasMany('App\Models\TodoList', 'user_id');
+    }
+
+    public function find_todo_list($id)
+    {
+        return $this->todo_lists->find($id);
+    }
+
+    public function getToken()
+    {
+        return $this->createToken('L4R4V3L-4P1')->plainTextToken;
+    }
 }
