@@ -21,7 +21,7 @@ class ProjectUser extends Model
     		$request->deadline_date_end." ".$request->deadline_time_end
     	);
 
-    	ProjectTodoList::create([
+    	return ProjectTodoList::create([
             'project_id'        => $this->project_id,
             'user_id_input'     => auth()->user()->id,
             'project_user_id'   => $this->id,
@@ -30,7 +30,5 @@ class ProjectUser extends Model
             'deadline_start_at' => $deadlineStartAt->format("Y-m-d H:i"),
             'deadline_end_at'   => $deadlineEndAt->format("Y-m-d H:i"),
         ]);
-
-        return $this;
     }
 }

@@ -93,10 +93,11 @@ class ProjectTodoListController extends Controller
     	}
 
     	// store todo list
-    	$project->addProjectTodoList($request);
+    	$todoList = $project->addProjectTodoList($request);
 
     	return response([
-    		'message' => 'Todo List has been added',
+    		'message'   => 'Todo List has been added',
+    		'todo_list' => $todoList,
     	], Response::HTTP_CREATED);
     }
 }

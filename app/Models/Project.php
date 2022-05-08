@@ -48,7 +48,6 @@ class Project extends Model
 
     public function addProjectTodoList($request)
     {
-        $this->projectUser->addTodoList($request);
-        return $this;
+        return $this->projectUser->addTodoList($request);
     }
 }
