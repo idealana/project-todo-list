@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TodoListController;
+use App\Http\Controllers\ProjectTodoListController;
 use App\Http\Controllers\AuthController;
 
 /*
@@ -21,8 +22,11 @@ use App\Http\Controllers\AuthController;
 // });
 
 //Public Routes
-Route::post('register', [ AuthController::class, 'register' ]);
-Route::post('auth/login', [ AuthController::class, 'login' ]);
+// AUTH
+Route::prefix('auth')->group(function(){
+	Route::post('register', [ AuthController::class, 'register' ]);
+	Route::post('login', [ AuthController::class, 'login' ]);
+});
 
 // Protected Routes
 Route::group([ 'middleware' => ['auth:sanctum'] ], function(){
@@ -34,6 +38,7 @@ Route::group([ 'middleware' => ['auth:sanctum'] ], function(){
 
 	// TODO LIST APP
 	Route::prefix('todo-list')->group(function(){
+		// TODO LIST APP
 		Route::get('/', [ TodoListController::class, 'index' ]);
 		Route::post('/', [ TodoListController::class, 'store' ]);
 		Route::get('{id}', [ TodoListController::class, 'show' ]);
@@ -41,5 +46,12 @@ Route::group([ 'middleware' => ['auth:sanctum'] ], function(){
 		Route::put('{id}/finished', [ TodoListController::class, 'finished' ]);
 		Route::put('{id}/unfinished', [ TodoListController::class, 'unfinished' ]);
 		Route::delete('{id}', [ TodoListController::class, 'destroy' ]);
+
+		// PROJECT TODO LIST APP
+		Route::prefix('project')->group(function(){
+			Route::post('/', [ ProjectTodoListController::class, 'storeProject' ]);
+			Route::post('{projectId}/user/add', [ ProjectTodoListController::class, 'addUser' ]);
+			Route::post('{projectId}/user/{userId}/todo', [ ProjectTodoListController::class, 'addUserTodo' ]);
+		});
 	});
 });

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Validation\ValidationException;
 
 class User extends Authenticatable
 {
@@ -55,5 +56,73 @@ class User extends Authenticatable
     public function getToken()
     {
         return $this->createToken('L4R4V3L-4P1')->plainTextToken;
+    }
+
+    public static function findByEmail($email)
+    {
+        return self::where('email', $email)->first();
+    }
+
+    /**
+     * PROJECT TODO LIST APP
+     */
+
+    /**
+     * $project instanceof App\Models\Project
+     */
+    public ?Project $project;
+
+    /**
+     * Relation hasMany App\Models\Project
+     */
+    public function projects()
+    {
+        return $this->hasMany('App\Models\Project', 'user_id');
+    }
+
+    public function createProject(array $request)
+    {
+        $this->project = Project::create([
+            'user_id'     => $this->id,
+            'name'        => $request['name'],
+            'description' => $request['description'],
+        ]);
+
+        // Insert Project Owner
+        $this->addUserToProject($this);
+
+        return $this;
+    }
+
+    public function addUserToProject(User $user)
+    {
+        $this->project->storeProjectUser($user);
+        return $this;
+    }
+
+    public function findProjectById($id)
+    {
+        $this->project = $this->projects->find($id);
+        return $this;
+    }
+
+    public function isProjectEmpty(): bool
+    {
+        return $this->project instanceof Project === false;
+    }
+
+    public function checkAndStoreProjectUser(User $user)
+    {
+        $this->project->findProjectUserByColumn('user_id', $user->id);
+
+        if(! $this->project->isProjectUserEmpty()) {
+            // if user exist
+            throw ValidationException::withMessages([
+                'email' => 'User already exist in this project'
+            ]);
+        }
+
+        $this->addUserToProject($user);
+        return $this;
     }
 }
