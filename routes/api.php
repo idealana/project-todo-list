@@ -50,8 +50,11 @@ Route::group([ 'middleware' => ['auth:sanctum'] ], function(){
 		// PROJECT TODO LIST APP
 		Route::prefix('project')->group(function(){
 			Route::post('/', [ ProjectTodoListController::class, 'storeProject' ]);
+			
 			Route::post('{projectId}/user/add', [ ProjectTodoListController::class, 'addUser' ]);
 			Route::post('{projectId}/user/{userId}/todo', [ ProjectTodoListController::class, 'addUserTodo' ]);
+
+			Route::put('{projectId}/todo/{todoId}', [ ProjectTodoListController::class, 'startTodoList' ]);
 		});
 	});
 });

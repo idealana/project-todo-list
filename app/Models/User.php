@@ -73,11 +73,24 @@ class User extends Authenticatable
     public ?Project $project;
 
     /**
+     * $projectUser instanceof App\Models\ProjectUser
+     */
+    public ?ProjectUser $projectUser;
+
+    /**
      * Relation hasMany App\Models\Project
      */
     public function projects()
     {
         return $this->hasMany('App\Models\Project', 'user_id');
+    }
+
+    /**
+     * Relation hasMany App\Models\ProjectUser
+     */
+    public function project_users()
+    {
+        return $this->hasMany('App\Models\ProjectUser', 'user_id');
     }
 
     public function createProject(array $request)
@@ -124,5 +137,16 @@ class User extends Authenticatable
 
         $this->addUserToProject($user);
         return $this;
+    }
+
+    public function findProjectUserByColumn($column, $value)
+    {
+        $this->projectUser = $this->project_users->where($column, $value)->first();
+        return $this;
+    }
+
+    public function isProjectUserEmpty(): bool
+    {
+        return $this->projectUser instanceof ProjectUser === false;
     }
 }
