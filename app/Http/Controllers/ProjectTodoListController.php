@@ -130,4 +130,34 @@ class ProjectTodoListController extends Controller
     		'message' => 'Todo List has been started',
     	]);
     }
+
+    public function finishTodoList(Request $request, $projectId, $todoId)
+    {
+        $user = auth()->user();
+
+        // check project user
+        $user->findProjectUserByColumn('project_id', $projectId);
+        if($user->isProjectUserEmpty()) {
+            return response(
+                [ 'message' => 'Project not found' ], Response::HTTP_NOT_FOUND
+            );
+        }
+
+        $projectUser = $user->projectUser;
+
+        // check todo list
+        $projectUser->findProjectTodoListByColumn('id', $todoId);
+        if($projectUser->isProjectTodoListEmpty()) {
+            return response(
+                [ 'message' => 'Project Todo List not found' ], Response::HTTP_NOT_FOUND
+            );
+        }
+
+        // finish todo list
+        $projectUser->finishProjectTodoList();
+
+        return response([
+            'message' => 'Todo List has been finished',
+        ]);
+    }
 }

@@ -61,7 +61,7 @@ class ProjectUser extends Model
     {
     	if($this->isProjectTodoListEnd()) {
     		throw ValidationException::withMessages([
-                'todo_list' => 'Project Todo List already finished'
+                'todo_list' => "Can't start. Project Todo List already finished"
             ]);
     	}
 
@@ -73,6 +73,24 @@ class ProjectUser extends Model
     	
     	$this->projectTodoList->update([ 'start_at' => now() ]);
     	return $this;
+    }
+
+    public function finishProjectTodoList()
+    {
+        if(! $this->isProjectTodoListStart()) {
+            throw ValidationException::withMessages([
+                'todo_list' => "Can't finish. Project Todo List not started"
+            ]);
+        }
+
+        if($this->isProjectTodoListEnd()) {
+            throw ValidationException::withMessages([
+                'todo_list' => 'Project Todo List already finished'
+            ]);
+        }
+        
+        $this->projectTodoList->update([ 'end_at' => now() ]);
+        return $this;
     }
 
     public function isProjectTodoListStart(): bool

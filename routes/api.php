@@ -54,7 +54,10 @@ Route::group([ 'middleware' => ['auth:sanctum'] ], function(){
 			Route::post('{projectId}/user/add', [ ProjectTodoListController::class, 'addUser' ]);
 			Route::post('{projectId}/user/{userId}/todo', [ ProjectTodoListController::class, 'addUserTodo' ]);
 
-			Route::put('{projectId}/todo/{todoId}', [ ProjectTodoListController::class, 'startTodoList' ]);
+			Route::prefix('{projectId}/todo/{todoId}')->group(function(){
+				Route::put('start', [ ProjectTodoListController::class, 'startTodoList' ]);
+				Route::put('finish', [ ProjectTodoListController::class, 'finishTodoList' ]);
+			});
 		});
 	});
 });
