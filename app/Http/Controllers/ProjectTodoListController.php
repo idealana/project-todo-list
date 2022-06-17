@@ -7,8 +7,21 @@ use Illuminate\Http\Response;
 use App\Models\User;
 use Illuminate\Validation\ValidationException;
 
+use App\Http\Resources\Resources;
+
 class ProjectTodoListController extends Controller
 {
+    public function getProjects()
+    {
+        $user        = auth()->user();
+        $getProjects = $user->project_users()->with([ 'project', 'project.project_users' ])->get();
+        $projects    = Resources::collection('project_user', $getProjects);
+
+        return response([
+            'projects' => $projects,
+        ]);
+    }
+
     public function storeProject(Request $request)
     {
     	$request->validate([

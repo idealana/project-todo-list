@@ -46,18 +46,19 @@ Route::group([ 'middleware' => ['auth:sanctum'] ], function(){
 		Route::put('{id}/finished', [ TodoListController::class, 'finished' ]);
 		Route::put('{id}/unfinished', [ TodoListController::class, 'unfinished' ]);
 		Route::delete('{id}', [ TodoListController::class, 'destroy' ]);
+	});
 
-		// PROJECT TODO LIST APP
-		Route::prefix('project')->group(function(){
-			Route::post('/', [ ProjectTodoListController::class, 'storeProject' ]);
-			
-			Route::post('{projectId}/user/add', [ ProjectTodoListController::class, 'addUser' ]);
-			Route::post('{projectId}/user/{userId}/todo', [ ProjectTodoListController::class, 'addUserTodo' ]);
+	// PROJECT TODO LIST APP
+	Route::prefix('projects')->group(function(){
+		Route::get('/', [ ProjectTodoListController::class, 'getProjects' ]);
+		Route::post('/', [ ProjectTodoListController::class, 'storeProject' ]);
+		
+		Route::post('{projectId}/user/add', [ ProjectTodoListController::class, 'addUser' ]);
+		Route::post('{projectId}/user/{userId}/todo', [ ProjectTodoListController::class, 'addUserTodo' ]);
 
-			Route::prefix('{projectId}/todo/{todoId}')->group(function(){
-				Route::put('start', [ ProjectTodoListController::class, 'startTodoList' ]);
-				Route::put('finish', [ ProjectTodoListController::class, 'finishTodoList' ]);
-			});
+		Route::prefix('{projectId}/todo/{todoId}')->group(function(){
+			Route::put('start', [ ProjectTodoListController::class, 'startTodoList' ]);
+			Route::put('finish', [ ProjectTodoListController::class, 'finishTodoList' ]);
 		});
 	});
 });

@@ -18,6 +18,14 @@ class ProjectUser extends Model
     public ?ProjectTodoList $projectTodoList;
 
     /**
+     * Relation belongsTo App\Models\Project
+     */
+    public function project()
+    {
+        return $this->belongsTo('App\Models\Project', 'project_id');
+    }
+
+    /**
      * Relation hasMany App\Models\ProjectTodoList
      */
     public function project_todo_lists()

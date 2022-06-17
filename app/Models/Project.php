@@ -50,4 +50,17 @@ class Project extends Model
     {
         return $this->projectUser->addTodoList($request);
     }
+
+    public function getStatus()
+    {
+        if($this->close_at) {
+            return [
+                'text' => 'Project sudah ditutup',
+            ];
+        }
+
+        return [
+            'text' => 'Project sedang berjalan',
+        ];
+    }
 }
