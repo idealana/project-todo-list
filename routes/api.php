@@ -52,6 +52,8 @@ Route::group([ 'middleware' => ['auth:sanctum'] ], function(){
 	Route::prefix('projects')->group(function(){
 		Route::get('/', [ ProjectTodoListController::class, 'getProjects' ]);
 		Route::post('/', [ ProjectTodoListController::class, 'storeProject' ]);
+
+		Route::get('{id}', [ ProjectTodoListController::class, 'detail' ]);
 		
 		Route::post('{projectId}/user/add', [ ProjectTodoListController::class, 'addUser' ]);
 		Route::post('{projectId}/user/{userId}/todo', [ ProjectTodoListController::class, 'addUserTodo' ]);

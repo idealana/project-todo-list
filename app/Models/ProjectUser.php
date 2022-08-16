@@ -26,6 +26,22 @@ class ProjectUser extends Model
     }
 
     /**
+     * Relation belongsTo App\Models\User
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User', 'user_id');
+    }
+
+    /**
+     * Relation belongsTo App\Models\User
+     */
+    public function user_input()
+    {
+        return $this->belongsTo('App\Models\User', 'user_id_input');
+    }
+
+    /**
      * Relation hasMany App\Models\ProjectTodoList
      */
     public function project_todo_lists()

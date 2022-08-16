@@ -173,4 +173,30 @@ class ProjectTodoListController extends Controller
             'message' => 'Todo List has been finished',
         ]);
     }
+
+    public function detail($projectId)
+    {
+        $user = auth()->user();
+
+        // check project user
+        $user->findProjectUserByColumn('project_id', $projectId);
+        if($user->isProjectUserEmpty()) {
+            return response(
+                [ 'message' => 'Project not found' ],
+                Response::HTTP_NOT_FOUND
+            );
+        }
+
+        $projectUser = $user->projectUser;
+        $project     = $projectUser->project;
+        $users       = $project->project_users()->with([ 'user', 'user_input', 'project_todo_lists' ])->get();
+
+        $projectResource = Resources::new('project', $project);
+        $userCollections = Resources::collection('project_user_lists', $users);
+
+        return response([
+            'project' => $projectResource,
+            'users'   => $userCollections,
+        ]);
+    }
 }
